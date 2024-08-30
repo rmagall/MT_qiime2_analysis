@@ -1,0 +1,44 @@
+#only want to look at days -3 to 28
+qiime feature-table filter-samples \
+   --i-table denoise_data/feature-table-0.qza\
+   --m-metadata-file fondue-output/metadata_abx_before_after_week.tsv \
+   --p-where 'SampleDayRelativeToD1Chemo BETWEEN -5 AND 30' \
+   --o-filtered-table filtered_feature_table/filtered-table-1.qza
+
+#filter features from the feature table if they don’t occur in at least two samples
+qiime feature-table filter-features \
+   --i-table filtered_feature_table/filtered-table-1.qza \
+   --p-min-samples 2 \
+   --o-filtered-table filtered_feature_table/filtered-table-2.qza 
+
+#filter all features that are no longer in our feature table from our collection of feature sequences
+qiime feature-table filter-seqs \
+   --i-data denoise_data/rep-seqs.qza \
+   --i-table filtered_feature_table/filtered-table-2.qza \
+   --o-filtered-data filtered_feature_table/filtered-sequences-1.qza 
+
+
+#################
+qiime feature-table filter-samples \
+   --i-table Taxonomy/filtered-table-4.qza \
+   --m-metadata-file fondue-output/metadata_abx_before_after_week.tsv \
+   --p-where "FirstCDiffDayRelativeToD1Chemo >= 0 OR FirstCDiffDayRelativeToD1Chemo IS NULL" \
+   --o-filtered-table Taxonomy/filtered-table-CDiff.qza
+
+qiime metadata tabulate \
+   --m-input-file filtered_feature_table/filtered-table-CDiff.qza \
+   --o-visualization filtered_feature_table/filtered-table-CDiff.qzv
+
+qiime feature-table summarize \
+   --i-table filtered_feature_table/filtered-table-CDiff.qza \
+   --m-sample-metadata-file fondue-output/sra_metadata_antibiotic_decay.tsv \
+   --o-visualization filtered_feature_table/filtered-table-CDiff.qzv
+
+
+##########################
+#filter for first time group
+qiime feature-table filter-samples \
+   --i-table Taxonomy/filtered-table-CDiff.qza \
+   --m-metadata-file fondue-output/sra_metadata_week.tsv \
+   --p-where ' "Time_group" == "1_Day 0 to 4" ' \
+   --o-filtered-table Taxonomy/filtered-table-CDiff_Day0_4.qza   

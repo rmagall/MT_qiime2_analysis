@@ -1,0 +1,63 @@
+#silva
+qiime feature-classifier classify-sklearn \
+   --i-classifier silva-138-99-515-806-nb-classifier.qza \
+   --i-reads filtered_feature_table/filtered-sequences-1.qza\
+   --o-classification Taxonomy/taxonomy.qza
+
+#liao 
+qiime feature-classifier classify-sklearn \
+   --i-classifier gg-13-8-99-nb-classifier.qza \
+   --i-reads filtered_feature_table/filtered-sequences-1.qza\
+   --o-classification Taxonomy/taxonomy.qza
+#generate a human-readable summary of the taxonomic annotations
+qiime metadata tabulate \
+   --m-input-file Taxonomy/taxonomy.qza \
+   --o-visualization Taxonomy/taxonomy.qzv
+
+#
+qiime taxa filter-table \
+   --i-table filtered_feature_table/filtered-table-2.qza \
+   --i-taxonomy Taxonomy/taxonomy.qza \
+   --p-mode contains \
+   --p-include p__ \
+   --p-exclude 'p__;,Chloroplast,Mitochondria' \
+   --o-filtered-table Taxonomy/filtered-table-3.qza
+
+#filter out samples from which we have obtained fewer than 10,000 sequences.
+qiime feature-table filter-samples \
+   --i-table Taxonomy/filtered-table-3.qza\
+   --p-min-frequency 10000 \
+   --o-filtered-table Taxonomy/filtered-table-4.qza
+
+#filter sequences we filtered out in feature table
+ qiime feature-table filter-seqs \
+   --i-data denoise_data/rep-seqs.qza \
+   --i-table Taxonomy/filtered-table-CDiff.qza \
+   --o-filtered-data Taxonomy/filtered-reps-seqs-2.qza
+
+#create taxonomy bar plots
+qiime taxa barplot \
+   --i-table Taxonomy/filtered-table-CDiff.qza  \
+   --i-taxonomy Taxonomy/taxonomy.qza  \
+   --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv\
+   --o-visualization Taxonomy/taxa-bar-plots-1.qzv
+
+ qiime feature-table summarize \
+    --i-table Taxonomy/filtered-table-CDiff.qza  \
+    --m-sample-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
+    --o-visualization Taxonomy/filtered-table-4-abx_treatment.qzv
+
+qiime metadata tabulate \
+   --m-input-file Taxonomy/filtered-table-CDiff.qza \
+   --o-visualization Taxonomy/filtered-table-CDiff.qzv
+
+
+
+#export feature table
+qiime tools export \
+ --input-path Taxonomy/filtered-table-CDiff.qza \
+ --output-path Taxonomy/feature-table
+
+#qza to tsv
+biom convert -i Taxonomy/feature-table/feature-table.biom -o Taxonomy/feature-table/feature-table.csv --to-tsv
+

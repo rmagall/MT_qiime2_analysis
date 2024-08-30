@@ -1,0 +1,7 @@
+#generate phylogenteic tree and more
+qiime phylogeny align-to-tree-mafft-fasttree \
+   --i-sequences Taxonomy/filtered-reps-seqs-2-.qza \
+   --o-alignment phylogenetic_tree/aligned-rep-seqs.qza \
+   --o-masked-alignment phylogenetic_tree/masked-aligned-rep-seqs.qza \
+   --o-tree phylogenetic_tree/unrooted-tree.qza \
+   --o-rooted-tree phylogenetic_tree/rooted-tree.qza

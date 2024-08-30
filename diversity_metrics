@@ -1,0 +1,8 @@
+#Core phylogenetic diversity metrics
+# set sampling depth to 10,000 for this analysis.
+qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny  phylogenetic_tree/rooted-tree.qza \
+  --i-table Taxonomy/filtered-table-CDiff.qza \
+  --p-sampling-depth 10000 \
+  --m-metadata-file fondue-output//metadata_abx_before_after_5d.tsv \
+  --output-dir diversity_metrics/diversity-core-metrics-phylogenetic

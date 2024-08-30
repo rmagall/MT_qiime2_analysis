@@ -1,7 +1,7 @@
 #only want to look at days -3 to 28
 qiime feature-table filter-samples \
    --i-table denoise_data/feature-table-0.qza\
-   --m-metadata-file fondue-output/metadata_abx_before_after_week.tsv \
+   --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
    --p-where 'SampleDayRelativeToD1Chemo BETWEEN -5 AND 30' \
    --o-filtered-table filtered_feature_table/filtered-table-1.qza
 
@@ -21,7 +21,7 @@ qiime feature-table filter-seqs \
 #################
 qiime feature-table filter-samples \
    --i-table Taxonomy/filtered-table-4.qza \
-   --m-metadata-file fondue-output/metadata_abx_before_after_week.tsv \
+   --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
    --p-where "FirstCDiffDayRelativeToD1Chemo >= 0 OR FirstCDiffDayRelativeToD1Chemo IS NULL" \
    --o-filtered-table Taxonomy/filtered-table-CDiff.qza
 
@@ -31,7 +31,7 @@ qiime metadata tabulate \
 
 qiime feature-table summarize \
    --i-table filtered_feature_table/filtered-table-CDiff.qza \
-   --m-sample-metadata-file fondue-output/sra_metadata_antibiotic_decay.tsv \
+   --m-sample-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
    --o-visualization filtered_feature_table/filtered-table-CDiff.qzv
 
 
@@ -39,6 +39,6 @@ qiime feature-table summarize \
 #filter for first time group
 qiime feature-table filter-samples \
    --i-table Taxonomy/filtered-table-CDiff.qza \
-   --m-metadata-file fondue-output/sra_metadata_week.tsv \
+   --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
    --p-where ' "Time_group" == "1_Day 0 to 4" ' \
    --o-filtered-table Taxonomy/filtered-table-CDiff_Day0_4.qza   

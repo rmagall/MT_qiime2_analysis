@@ -3,27 +3,27 @@
 qiime taxa collapse \
  --i-table Taxonomy/filtered-table-CDiff.qza \
  --i-taxonomy Taxonomy/taxonomy.qza \
- --p-level 7 \
- --o-collapsed-table differential_abundance/filtered-table-l7.qza
+ --p-level 6 \
+ --o-collapsed-table differential_abundance/filtered-table-l6.qza
 
 qiime composition ancombc \
- --i-table differential_abundance/filtered-table-l6_Day0_4.qza \
- --m-metadata-file fondue-output/sra_metadata_week.tsv\
+ --i-table differential_abundance/filtered-table-CDiff.qza \
+ --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv\
  --p-formula "CDiff_infection" \
- --p-reference-levels "CDiff_infection::TRUE"\
- --o-differentials differential_abundance/l6-ancombc-CDiff_infection_False.qza
+ --p-reference-levels "CDiff_infection::FALSE"\
+ --o-differentials differential_abundance/l6-ancombc-CDiff_infection.qza
 
 qiime composition da-barplot \
  --i-data differential_abundance/l6-ancombc-CDiff_infection_False.qza\
  --p-significance-threshold 0.05 \
  --p-level-delimiter ';' \
- --o-visualization differential_abundance/l6-da-barplot-CDiff_infection_False-p05.qzv
+ --o-visualization differential_abundance/l6-da-barplot-CDiff_infection-p05.qzv
 
 
 #CDI over the first four days of treatment
 ##
 qiime taxa collapse \
- --i-table Taxonomy/filtered-table-CDiff.qza \
+ --i-table Taxonomy/filtered-table-CDiff_Day0_4.qza  \
  --i-taxonomy Taxonomy/taxonomy.qza \
  --p-level 7 \
  --o-collapsed-table differential_abundance/filtered-table-l7_Day0_4.qza
@@ -33,10 +33,52 @@ qiime composition ancombc \
  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv\
  --p-formula "CDiff_infection" \
  --p-reference-levels "CDiff_infection::FALSE"\
- --o-differentials differential_abundance/l6-ancombc-CDiff_infection.qza
+ --o-differentials differential_abundance/l7-ancombc-CDiff_infection_Day0_4.qza
 
 qiime composition da-barplot \
- --i-data differential_abundance/l6-ancombc-CDiff_infection.qza\
+ --i-data differential_abundance/l7-ancombc-CDiff_infection_Day0_4.qza\
  --p-significance-threshold 0.05 \
  --p-level-delimiter ';' \
- --o-visualization differential_abundance/l6-da-barplot-CDiff_infection-p05.qzv
+ --o-visualization differential_abundance/l7-da-barplot-CDiff_infection-Day0_4_p05.qzv
+
+#########antibioitics
+
+#cefepime
+qiime taxa collapse \
+ --i-table Taxonomy/filtered-table-CDiff.qza \
+ --i-taxonomy Taxonomy/taxonomy.qza \
+ --p-level 6 \
+ --o-collapsed-table differential_abundance/filtered-table-l6.qza
+
+qiime composition ancombc \
+ --i-table differential_abundance/filtered-table-CDiff.qza \
+ --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv\
+ --p-formula "Treatment_Cefepime" \
+ --p-reference-levels "Treatment_Cefepime::Before Treatment"\
+ --o-differentials differential_abundance/l6-ancombc-Treatment_Cefepime.qza
+
+qiime composition da-barplot \
+ --i-data differential_abundance/l6-ancombc-Treatment_Cefepime.qza\
+ --p-significance-threshold 0.05 \
+ --p-level-delimiter ';' \
+ --o-visualization differential_abundance/l6-da-barplot-Treatment_Cefepime-p05.qzv
+
+#levofloxacin
+qiime taxa collapse \
+ --i-table Taxonomy/filtered-table-CDiff.qza \
+ --i-taxonomy Taxonomy/taxonomy.qza \
+ --p-level 6 \
+ --o-collapsed-table differential_abundance/filtered-table-l6.qza
+
+qiime composition ancombc \
+ --i-table differential_abundance/filtered-table-CDiff.qza \
+ --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv\
+ --p-formula "Treatment_Levofloxacin" \
+ --p-reference-levels "Treatment_Levofloxacin::Before Treatment"\
+ --o-differentials differential_abundance/l6-ancombc-Treatment_Levofloxacin.qza
+
+qiime composition da-barplot \
+ --i-data differential_abundance/l6-ancombc-Treatment_Levofloxacin.qza\
+ --p-significance-threshold 0.05 \
+ --p-level-delimiter ';' \
+ --o-visualization differential_abundance/l6-da-barplot-Treatment_Levofloxacin-p05.qzv

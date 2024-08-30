@@ -1,0 +1,35 @@
+qiime demux summarize \
+ --i-data denoise_data/trimmed_seq.qza \
+ --o-visualization denoise_data/trimmed_demux_summ.qzv
+
+qiime dada2 denoise-paired \
+   --i-demultiplexed-seqs denoise_data/trimmed_seq.qza \
+   --p-trim-left-f 33 \
+   --p-trim-left-r 35 \
+   --p-trunc-len-f 220 \
+   --p-trunc-len-r 170 \
+   --o-table denoise_data/feature-table-0.qza \
+   --o-representative-sequences denoise_data/rep-seqs.qza\
+   --o-denoising-stats denoise_data/dada2-stats.qza \
+   --p-n-threads 0
+
+#summary of feature table
+qiime feature-table summarize \
+   --i-table denoise_data/feature-table-0.qza \
+   --m-sample-metadata-file fondue-output/sra_metadata_week.tsv \
+   --o-visualization denoise_data/feature-table-0-summ.qzv
+
+#amplicon sequences
+qiime feature-table tabulate-seqs \
+   --i-data denoise_data/rep-seqs.qza \
+   --o-visualization denoise_data/rep-seqs-summ.qzv
+
+#dada2 stats
+qiime metadata tabulate \
+   --m-input-file denoise_data/dada2-stats.qza \
+   --o-visualization denoise_data/dada2-stats-summ.qzv
+
+#feature table
+qiime metadata tabulate \
+   --m-input-file denoise_data/feature-table-0.qza \
+   --o-visualization denoise_data/feature-table.qzv 

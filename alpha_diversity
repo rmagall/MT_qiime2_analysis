@@ -1,0 +1,19 @@
+#Alpha group significance - observed feature
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity diversity_metrics/diversity-core-metrics-phylogenetic/observed_features_vector.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv  \
+  --o-visualization alpha_diversity/alpha-group-sig-obs-feats.qzv
+
+#Alpha group significance - shannon 
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
+  --o-visualization alpha_diversity/alpha-group-sig-shannon.qzv
+
+#Linear mixed effects - shannon entropy
+qiime longitudinal linear-mixed-effects \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --p-state-column SampleDayRelativeToD1Chemo \
+  --p-individual-id-column Patient_ID \
+  --p-metric shannon_entropy\
+  --o-visualization alpha_diversity/lme-shannon-sample_day.qzv

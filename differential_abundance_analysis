@@ -1,0 +1,42 @@
+#CDI over entire study period 
+##
+qiime taxa collapse \
+ --i-table Taxonomy/filtered-table-CDiff.qza \
+ --i-taxonomy Taxonomy/taxonomy.qza \
+ --p-level 7 \
+ --o-collapsed-table differential_abundance/filtered-table-l7.qza
+
+qiime composition ancombc \
+ --i-table differential_abundance/filtered-table-l6_Day0_4.qza \
+ --m-metadata-file fondue-output/sra_metadata_week.tsv\
+ --p-formula "CDiff_infection" \
+ --p-reference-levels "CDiff_infection::TRUE"\
+ --o-differentials differential_abundance/l6-ancombc-CDiff_infection_False.qza
+
+qiime composition da-barplot \
+ --i-data differential_abundance/l6-ancombc-CDiff_infection_False.qza\
+ --p-significance-threshold 0.05 \
+ --p-level-delimiter ';' \
+ --o-visualization differential_abundance/l6-da-barplot-CDiff_infection_False-p05.qzv
+
+
+#CDI over the first four days of treatment
+##
+qiime taxa collapse \
+ --i-table Taxonomy/filtered-table-CDiff.qza \
+ --i-taxonomy Taxonomy/taxonomy.qza \
+ --p-level 7 \
+ --o-collapsed-table differential_abundance/filtered-table-l7_Day0_4.qza
+
+qiime composition ancombc \
+ --i-table differential_abundance/filtered-table-l7_Day0_4.qza \
+ --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv\
+ --p-formula "CDiff_infection" \
+ --p-reference-levels "CDiff_infection::FALSE"\
+ --o-differentials differential_abundance/l6-ancombc-CDiff_infection.qza
+
+qiime composition da-barplot \
+ --i-data differential_abundance/l6-ancombc-CDiff_infection.qza\
+ --p-significance-threshold 0.05 \
+ --p-level-delimiter ';' \
+ --o-visualization differential_abundance/l6-da-barplot-CDiff_infection-p05.qzv

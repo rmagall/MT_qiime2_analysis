@@ -1,0 +1,64 @@
+#generating ordination plots
+qiime diversity umap \
+  --i-distance-matrix diversity_metrics/diversity-core-metrics-phylogenetic/unweighted_unifrac_distance_matrix.qza \
+  --o-umap beta_diversity/uu-umap.qza
+
+qiime diversity umap \
+  --i-distance-matrix diversity_metrics/diversity-core-metrics-phylogenetic/weighted_unifrac_distance_matrix.qza \
+  --o-umap beta_diversity/wu-umap.qza
+
+#expanded metadata 
+qiime metadata tabulate \
+  --m-input-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --o-visualization beta_diversity/expanded-metadata-summ.qzv
+
+qiime taxa barplot \
+  --i-table Taxonomy/filtered-table-CDiff.qza \
+  --i-taxonomy Taxonomy/taxonomy.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --o-visualization beta_diversity/taxa-bar-plots-2.qzv
+
+qiime emperor plot \
+  --i-pcoa beta_diversity/uu-umap.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --p-custom-axes SampleDayRelativeToD1Chemo \
+  --o-visualization beta_diversity/uu-umap-emperor-w-time.qzv
+
+qiime emperor plot \
+  --i-pcoa beta_diversity/wu-umap.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --p-custom-axes SampleDayRelativeToD1Chemo \
+  --o-visualization beta_diversity/wu-umap-emperor-w-time.qzv
+
+qiime emperor plot \
+  --i-pcoa diversity_metrics/diversity-core-metrics-phylogenetic/unweighted_unifrac_pcoa_results.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --p-custom-axes SampleDayRelativeToD1Chemo \
+  --o-visualization beta_diversity/uu-pcoa-emperor-w-time.qzv
+
+qiime emperor plot \
+  --i-pcoa diversity_metrics/diversity-core-metrics-phylogenetic/weighted_unifrac_pcoa_results.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --p-custom-axes SampleDayRelativeToD1Chemo \
+  --o-visualization beta_diversity/wu-pcoa-emperor-w-time.qzv
+
+#no time
+qiime emperor plot \
+  --i-pcoa diversity_metrics/diversity-core-metrics-phylogenetic/unweighted_unifrac_pcoa_results.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --o-visualization beta_diversity/uu-pcoa-emperor.qzv
+
+qiime emperor plot \
+  --i-pcoa diversity_metrics/diversity-core-metrics-phylogenetic/weighted_unifrac_pcoa_results.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --o-visualization beta_diversity/wu-pcoa-emperor.qzv
+
+qiime emperor plot \
+  --i-pcoa beta_diversity/uu-umap.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --o-visualization beta_diversity/uu-umap-emperor.qzv
+
+qiime emperor plot \
+  --i-pcoa beta_diversity/wu-umap.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv beta_diversity/uu-umap.qza diversity_metrics/diversity-core-metrics-phylogenetic/faith_pd_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/evenness_vector.qza diversity_metrics/diversity-core-metrics-phylogenetic/shannon_vector.qza \
+  --o-visualization beta_diversity/wu-umap-emperor.qzv

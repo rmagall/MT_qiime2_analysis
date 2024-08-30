@@ -16,7 +16,7 @@ qiime dada2 denoise-paired \
 #summary of feature table
 qiime feature-table summarize \
    --i-table denoise_data/feature-table-0.qza \
-   --m-sample-metadata-file fondue-output/sra_metadata_week.tsv \
+   --m-sample-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
    --o-visualization denoise_data/feature-table-0-summ.qzv
 
 #amplicon sequences

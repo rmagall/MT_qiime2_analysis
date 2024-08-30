@@ -1,0 +1,47 @@
+#Data_import 
+qiime tools import \
+        --type NCBIAccessionIDs \
+        --input-path Data/sample_ids.tsv\
+        --output-path metadata_file_runs.qza
+
+qiime fondue get-all \
+      --i-accession-ids metadata_file_runs.qza \
+      --p-email rmagallon@ethz.ch \
+      --p-retries 3 \
+      --verbose \
+      --output-dir fondue-output
+qiime tools extract \
+       --input-path fondue-output/metadata.qza \
+       --output-path fondue-output/metadata
+
+
+qiime tools export \
+       --input-path fondue-output/metadata.qza \
+       --output-path .
+
+qiime tools extract \
+       --input-path fondue-output/paired_reads.qza \
+       --output-path fondue-output/paired_reads
+
+qiime tools extract \
+       --input-path denoise_data/trimmed_seq.qza \
+       --output-path denoise_data/trimmed_reads
+
+qiime tools import \
+   --type 'SampleData[PairedEndSequencesWithQuality]' \
+   --input-format CasavaOneEightSingleLanePerSampleDirFmt \
+   --input-path fondue-output/paired_reads/59cd5ea0-733a-43ad-b5fb-0c3300c38e73/data\
+   --output-path fondue-output/demultiplexed-sequences.qza
+
+#adapter trimming
+qiime cutadapt trim-paired \
+ --i-demultiplexed-sequences fondue-output/demultiplexed-sequences.qza \
+ --p-front-f GTGCCAGCMGCCGCGGTAA \
+ --p-front-r GACTACHVGGGTWTCTAAT \
+ --p-discard-untrimmed \
+ --o-trimmed-sequences denoise_data/trimmed_seq.qza \
+ --verbose
+
+qiime demux summarize \
+ --i-data denoise_data/trimmed_seq.qza \
+ --o-visualization denoise_data/trimmed_demux_summ.qzv

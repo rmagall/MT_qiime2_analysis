@@ -1,0 +1,22 @@
+#Generate a feature table summary
+ qiime feature-table summarize \
+   --i-table Taxonomy/filtered-table-CDiff.qza  \
+   --m-sample-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
+   --o-visualization sampling_depth/filtered-table-4-summ.qzv
+
+#Alpha rarefaction plots
+qiime diversity alpha-rarefaction \
+  --i-table Taxonomy/filtered-table-4.qza  \
+  --p-metrics shannon \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
+  --p-max-depth 33000 \
+  --o-visualization sampling_depth/shannon-rarefaction-plot.qzv
+
+#beta rarefraction plots
+qiime diversity beta-rarefaction \
+  --i-table Taxonomy/filtered-table-4.qza  \
+  --p-metric braycurtis \
+  --p-clustering-method nj \
+  --p-sampling-depth 10000 \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
+  --o-visualization sampling_depth/braycurtis-rarefaction-plot.qzv

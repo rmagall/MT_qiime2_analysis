@@ -1,0 +1,62 @@
+#shows result for test set only 
+qiime sample-classifier classify-samples \
+  --i-table Taxonomy/filtered-table-CDiff.qza \
+  --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
+  --m-metadata-column CDiff_infection \
+  --p-optimize-feature-selection \
+  --p-parameter-tuning \
+  --p-estimator RandomForestClassifier \
+  --p-n-estimators 20 \
+  --p-random-state 123 \
+  --verbose \
+  --output-dir sample-classifier-tutorial/rf_classifier
+
+
+qiime metadata tabulate \
+  --m-input-file sample-classifier-tutorial/rf_classifier-CDiff_infection/predictions.qza \
+  --o-visualization sample-classifier-tutorial/rf_classifier-CDiff_infection/predictions.qzv
+
+qiime metadata tabulate \
+  --m-input-file sample-classifier-tutorial/rf_classifier-CDiff_infection/probabilities.qza \
+  --o-visualization sample-classifier-tutorial/rf_classifier-CDiff_infection/probabilities.qzv
+
+qiime metadata tabulate \
+    --m-input-file sample-classifier-tutorial/rf_classifier-Sample/feature_importance.qza \
+    --o-visualization sample-classifier-tutorial/rf_classifier-Sample/feature_importance.qzv
+
+qiime metadata tabulate \
+    --m-input-file sample-classifier-tutorial/rf_classifier-CDiff_infection/test_targets.qza \
+    --m-input-file sample-classifier-tutorial/rf_classifier-CDiff_infection/predictions.qza \
+    --o-visualization sample-classifier-tutorial/rf_classifier-CDiff_infection/test_targets_predictions.qzv
+
+#heatmap
+qiime sample-classifier heatmap \
+    --i-table Taxonomy/filtered-table-CDI.qza \
+    --i-importance sample-classifier-tutorial/rf_classifier/feature_importance.qza \
+    --m-sample-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
+    --m-sample-metadata-column CDiff_infection \
+    --p-group-samples \
+    --p-feature-count 30 \
+    --o-filtered-table sample-classifier-tutorial/rf_classifier/important_feature_table_top_30.qza \
+    --o-heatmap sample-classifier-tutorial/rf_classifier/important_feature_heatmap.qzv
+
+#nested cross validation
+qiime sample-classifier classify-samples-ncv \
+    --i-table Taxonomy/filtered-table-CDiff.qza \
+    --m-metadata-file fondue-output/metadata_abx_before_after_5d.tsv \
+    --m-metadata-column CDiff_infection \
+    --p-parameter-tuning \
+    --p-estimator RandomForestClassifier \
+    --p-random-state 123 \
+    --output-dir sample-classifier-tutorial/nested_cross_validation
+
+qiime sample-classifier confusion-matrix \
+    --i-predictions sample-classifier-tutorial/nested_cross_validation/predictions.qza \
+    --i-probabilities sample-classifier-tutorial/nested_cross_validation/probabilities.qza \
+    --m-truth-file fondue-output/metadata_abx_before_after_5d.tsv \
+    --m-truth-column CDiff_infection \
+    --o-visualization sample-classifier-tutorial/nested_cross_validation/ncv_confusion_matrix.qzv
+
+qiime metadata tabulate \
+    --m-input-file sample-classifier-tutorial/nested_cross_validation/feature_importance.qza \
+    --o-visualization sample-classifier-tutorial/nested_cross_validation/feature_importance.qzv
